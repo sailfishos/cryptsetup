@@ -10,13 +10,13 @@
 Summary: A utility for setting up encrypted disks
 Name: cryptsetup
 Version: 1.6.7
-Release: 1%{?dist}
+Release: 2%{?dist}
 License: GPLv2+ and LGPLv2+
 Group: Applications/System
 URL: https://gitlab.com/cryptsetup/cryptsetup
 BuildRequires: libgcrypt-devel, popt-devel, device-mapper-devel
-BuildRequires: libgpg-error-devel, libuuid-devel, libsepol-devel
-BuildRequires: libselinux-devel, python-devel, python3-devel
+BuildRequires: libgpg-error-devel, libuuid-devel
+BuildRequires: python-devel, python3-devel
 Provides: cryptsetup-luks = %{version}-%{release}
 Obsoletes: cryptsetup-luks < 1.4.0
 Requires: cryptsetup-libs = %{version}-%{release}
