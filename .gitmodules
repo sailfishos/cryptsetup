@@ -1,0 +1,3 @@
+[submodule "cryptsetup"]
+	path = cryptsetup
+	url = https://gitlab.com/cryptsetup/cryptsetup.git
