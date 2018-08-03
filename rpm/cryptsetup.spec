@@ -11,6 +11,7 @@ BuildRequires: pkgconfig(popt)
 BuildRequires: pkgconfig(devmapper)
 BuildRequires: pkgconfig(libgpg-error)
 BuildRequires: pkgconfig(uuid)
+BuildRequires: pkgconfig(openssl)
 BuildRequires: gettext-devel
 BuildRequires: autoconf
 BuildRequires: automake
