@@ -1,17 +1,17 @@
 Summary: A utility for setting up encrypted disks
 Name: cryptsetup
-Version: 1.7.5
+Version: 2.1.0
 Release: 1
 License: GPLv2+ and LGPLv2+
 Group: Applications/System
 URL: https://gitlab.com/cryptsetup/cryptsetup
 Source0: %{name}-%{version}.tar.gz
-BuildRequires: pkgconfig(libgcrypt)
+BuildRequires: pkgconfig(blkid)
 BuildRequires: pkgconfig(popt)
 BuildRequires: pkgconfig(devmapper)
-BuildRequires: pkgconfig(libgpg-error)
 BuildRequires: pkgconfig(uuid)
 BuildRequires: pkgconfig(openssl)
+BuildRequires: pkgconfig(json-c)
 BuildRequires: gettext-devel
 BuildRequires: autoconf
 BuildRequires: automake
@@ -29,7 +29,6 @@ disk encryption using dm-crypt kernel module.
 %package devel
 Group: Development/Libraries
 Requires: %{name} = %{version}-%{release}
-Requires: libgcrypt-devel > 1.1.42
 Requires: device-mapper-devel
 Requires: libuuid-devel
 Requires: pkgconfig
@@ -51,7 +50,6 @@ Obsoletes: cryptsetup-luks < 1.4.0
 This package contains the cryptsetup shared library, libcryptsetup.
 
 %package -n veritysetup
-Group: Applications/System
 Summary: A utility for setting up dm-verity volumes
 Requires: cryptsetup-libs = %{version}-%{release}
 
@@ -59,8 +57,15 @@ Requires: cryptsetup-libs = %{version}-%{release}
 The veritysetup package contains a utility for setting up
 disk verification using dm-verity kernel module.
 
+%package -n integritysetup
+Summary: A utility for setting up dm-integrity volumes
+Requires: cryptsetup-libs = %{version}-%{release}
+
+%description -n integritysetup
+The integritysetup package contains a utility for setting up
+disk integrity protection using dm-integrity kernel module.
+
 %package reencrypt
-Group: Applications/System
 Summary: A utility for offline reencryption of LUKS encrypted disks.
 Requires: cryptsetup-libs = %{version}-%{release}
 
@@ -85,6 +90,9 @@ rm -rf %{buildroot}
 
 make install DESTDIR=%{buildroot}
 
+mkdir -p %{buildroot}/%{_tmpfilesdir}
+install -D -m 644 scripts/cryptsetup.conf %{buildroot}/%{_tmpfilesdir}
+
 find %{buildroot} -name \*.la | xargs rm -f
 %find_lang cryptsetup
 
@@ -93,20 +101,22 @@ find %{buildroot} -name \*.la | xargs rm -f
 %postun -n cryptsetup-libs -p /sbin/ldconfig
 
 %files
-%{!?_licensedir:%global license %%doc}
 %license COPYING
 %doc AUTHORS FAQ docs/*ReleaseNotes
 %{_mandir}/man8/cryptsetup.8.gz
 %{_sbindir}/cryptsetup
 
 %files -n veritysetup
-%{!?_licensedir:%global license %%doc}
 %license COPYING
 %{_mandir}/man8/veritysetup.8.gz
 %{_sbindir}/veritysetup
 
+%files -n integritysetup
+%license COPYING
+%{_mandir}/man8/integritysetup.8.gz
+%{_sbindir}/integritysetup
+
 %files reencrypt
-%{!?_licensedir:%global license %%doc}
 %license COPYING
 %doc misc/dracut_90reencrypt
 %{_mandir}/man8/cryptsetup-reencrypt.8.gz
@@ -119,8 +129,7 @@ find %{buildroot} -name \*.la | xargs rm -f
 %{_libdir}/pkgconfig/libcryptsetup.pc
 
 %files libs -f cryptsetup.lang
-%{!?_licensedir:%global license %%doc}
 %license COPYING COPYING.LGPL
 %{_libdir}/libcryptsetup.so.*
-
-%clean
+%{_tmpfilesdir}/cryptsetup.conf
+%ghost %dir /run/cryptsetup
