@@ -1,6 +1,6 @@
 Name:    cryptsetup
 Summary: A utility for setting up encrypted disks
-Version: 2.3.4
+Version: 2.4.3
 Release: 1
 License: GPLv2+ and LGPLv2+
 URL: https://gitlab.com/cryptsetup/cryptsetup
@@ -77,7 +77,7 @@ can be used for offline reencryption of disk in situ.
 chmod -x misc/dracut_90reencrypt/*
 
 %build
-%reconfigure --enable-cryptsetup-reencrypt --with-crypto_backend=openssl
+%reconfigure --enable-cryptsetup-reencrypt --with-crypto_backend=openssl --disable-ssh-token
 %make_build
 
 %install
